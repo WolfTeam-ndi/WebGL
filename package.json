@@ -1,0 +1,44 @@
+{
+  "name": "webgl-ndi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "three": "^0.82.1"
+  },
+  "devDependencies": {
+    "babel-preset-latest": "^6.16.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
+    "serve": "^1.4.0",
+    "watchify": "^3.7.0"
+  },
+  "scripts": {
+    "start": "npm run serve & npm run watch",
+    "serve": "serve public/",
+    "watch": "watchify src/app.js -o public/bundle.js",
+    "build": "browserify src/app.js -o public/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WolfTeam-ndi/WebGL.git"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "latest"
+          ]
+        }
+      ]
+    ]
+  },
+  "author": "WolfTeam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WolfTeam-ndi/WebGL/issues"
+  },
+  "homepage": "https://github.com/WolfTeam-ndi/WebGL#readme"
+}
