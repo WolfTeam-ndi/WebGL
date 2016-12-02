@@ -37,7 +37,7 @@ export default (state = initialState, action) => {
 				...state,
 				viewport: {
 					...state.viewport,
-					rotation: (state.viewport.rotation + action.delta) % Math.PI,
+					rotation: (state.viewport.rotation + action.delta) % (2 * Math.PI),
 				}
 			};
 

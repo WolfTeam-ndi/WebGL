@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import store from './store';
-import { selectCurrentBranch, selectLookAt, selectCameraPosition } from './store/selectors';
+import { selectCurrentBranch, selectLookAt, selectCameraPosition, selectViewport } from './store/selectors';
 import { selectRepo, rotateViewport, moveViewport } from './store/actions';
 
 var fenWidth  = window.innerWidth*0.8;
@@ -55,10 +55,31 @@ function update(){
 	setTimeout(function() { update(); }, 40);
 }
 
-store.subscribe(() => {
-	const state = store.getState();
+const updateCamera = state => {
 	camera.position.copy(selectCameraPosition(state));
 	camera.lookAt(selectLookAt(state));
+};
+
+const updateScene = data => {
+
+};
+
+let _oldData = null;
+let _oldViewport = null;
+store.subscribe(() => {
+	const state = store.getState();
+
+	const viewport = selectViewport(state);
+	if (viewport !== _oldViewport) {
+		updateCamera(state);
+		_oldViewport = viewport;
+	}
+
+	const data = selectCurrentBranch(state);
+	if (data !== _oldData) {
+		updateScene(data);
+		_oldData = data;
+	}
 });
 
 var rotCamY = 0;
