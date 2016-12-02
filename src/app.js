@@ -26,7 +26,6 @@ light.shadowCameraBottom = -20;
 */
 scene.add(light);
 
-
 // Fin lumières
 const updateCamera = state => {
 	camera.position.copy(selectCameraPosition(state));
@@ -155,6 +154,18 @@ let needsUpdate = false;
 let _oldData = null;
 let _oldViewport = null;
 
+window.addEventListener( 'resize', onWindowResize, false );
+
+function onWindowResize(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+	needsUpdate = true;
+	_oldViewport = null;
+}
+
 function update() {
 	if (needsUpdate) {
 		needsUpdate = false;
@@ -165,6 +176,8 @@ function update() {
 		if (data !== _oldData) {
 			updateScene(data);
 			_oldData = data;
+
+			updateCommits(data, viewport);
 		}
 
 		const viewport = selectViewport(state);
