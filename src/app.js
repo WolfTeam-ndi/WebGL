@@ -26,11 +26,12 @@ light.shadowCameraBottom = -20;
 */
 scene.add(light);
 
-light.position.set( 0, 0, 0 );
+
 // Fin lumières
 const updateCamera = state => {
 	camera.position.copy(selectCameraPosition(state));
 	camera.lookAt(selectLookAt(state));
+	light.position.set( camera.position.y, 0, 0 );
 };
 const stepSpace = 8;
 const vecFromSpaceTime = ({ space, time }) => {
