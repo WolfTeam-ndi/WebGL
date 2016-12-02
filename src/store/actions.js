@@ -26,3 +26,6 @@ export const selectRepo = (repository, branch = 'master') => {
 		});
 	}
 }
+
+export const moveViewport = delta => ({ type: 'MOVE_VIEWPORT', delta });
+export const rotateViewport = delta => ({ type: 'ROTATE_VIEWPORT', delta });

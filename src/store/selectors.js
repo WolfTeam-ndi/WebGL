@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { Vector3 } from 'three';
 
 export const selectRepositories = state => state && state.repositories;
 
@@ -41,4 +42,19 @@ export const selectCurrentBranch = createSelector(
 	selectBranchSelection,
 	selectCurrentRepository,
 	(current, branches) => branches && branches[current]
+);
+
+// Select viewport related coords
+export const selectViewport = state => state.viewport;
+
+export const selectLookAt = createSelector(
+	selectViewport,
+	viewport => new Vector3(0, viewport.height, 0)
+);
+
+const DISTANCE = 10;
+
+export const selectCameraPosition = createSelector(
+	selectViewport,
+	viewport => new Vector3(DISTANCE * Math.sin(viewport.rotation), viewport.height, DISTANCE * Math.cos(viewport.rotation))
 );

@@ -6,6 +6,10 @@ export const initialState = {
 		branch: null,
 		pipeline: null,
 	},
+	viewport: {
+		rotation: 0,
+		height: 0,
+	}
 };
 
 export default (state = initialState, action) => {
@@ -26,6 +30,25 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				selection: action.selection,
+			};
+
+		case 'ROTATE_VIEWPORT':
+			return {
+				...state,
+				viewport: {
+					...state.viewport,
+					rotation: (state.viewport.rotation + action.delta) % Math.PI,
+				}
+			};
+
+
+		case 'MOVE_VIEWPORT':
+			return {
+				...state,
+				viewport: {
+					...state.viewport,
+					height: Math.max(0, state.viewport.height + action.delta),
+				}
 			};
 	}
 };

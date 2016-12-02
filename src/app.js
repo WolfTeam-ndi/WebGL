@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import store from './store';
-import { selectCurrentBranch } from './store/selectors';
-import { selectRepo } from './store/actions';
+import { selectCurrentBranch, selectLookAt, selectCameraPosition } from './store/selectors';
+import { selectRepo, rotateViewport, moveViewport } from './store/actions';
 
 var fenWidth  = window.innerWidth*0.8;
 var fenHeight = window.innerHeight*0.8;
@@ -54,24 +54,28 @@ function update(){
 	//cube.rotation.y += 0.01;
 	setTimeout(function() { update(); }, 40);
 }
+
+store.subscribe(() => {
+	const state = store.getState();
+	camera.position.copy(selectCameraPosition(state));
+	camera.lookAt(selectLookAt(state));
+});
+
 var rotCamY = 0;
 var distance =5;
 var rotCamYRange = 50.0;
 function EventKey(e){
 	if(typeof e.keyCode !== 'undefined'){
-		console.log(e.keyCode);
 		switch(e.keyCode){
-			case 81: rotCamY += (Math.PI*2.0)/rotCamYRange; camera.lookAt(new THREE.Vector3( 0, camera.position.y, 0 )); break;
-			case 68: rotCamY -= (Math.PI*2.0)/rotCamYRange; camera.lookAt(new THREE.Vector3( 0, camera.position.y, 0 )); break;
-			case 90: camera.position.y +=0.1; break;
-			case 83: camera.position.y -=0.1; break;
+			case 81: store.dispatch(rotateViewport(Math.PI / 30)); break;
+			case 68: store.dispatch(rotateViewport(-Math.PI / 30)); break;
+			case 90: store.dispatch(moveViewport(0.1)); break;
+			case 83: store.dispatch(moveViewport(-0.1)); break;
 		}
-		camera.position.x = distance * Math.sin(rotCamY);
-		camera.position.z = distance * Math.cos(rotCamY);
 	}else{
 		console.log(e.detail);
 	}
-	
+
 }
 function EventKeyOff(){
 	document.getElementById("keyPrint").innerHTML="";
