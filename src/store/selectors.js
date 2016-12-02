@@ -52,7 +52,7 @@ export const selectLookAt = createSelector(
 	viewport => new Vector3(0, viewport.height, 0)
 );
 
-const DISTANCE = 10;
+const DISTANCE = 30;
 
 export const selectCameraPosition = createSelector(
 	selectViewport,
