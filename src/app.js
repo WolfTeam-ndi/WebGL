@@ -17,7 +17,7 @@ renderer.domElement.id = "rendu";
 var renderDiv = document.getElementById("renderDiv");
 renderDiv.appendChild( renderer.domElement );
 // Lumières
-const light = new THREE.AmbientLight(0x212223)
+const light = new THREE.PointLight(0xFFFFFF);
 /*
 light.shadowCameraLeft = -20;
 light.shadowCameraRight = 20;
@@ -26,7 +26,7 @@ light.shadowCameraBottom = -20;
 */
 scene.add(light);
 
-light.position.set( -60, 20, 100 );
+light.position.set( 0, 0, 0 );
 // Fin lumières
 const updateCamera = state => {
 	camera.position.copy(selectCameraPosition(state));
