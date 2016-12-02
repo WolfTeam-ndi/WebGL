@@ -54,7 +54,7 @@ const updateScene = data => {
 			return objMesh;
 		});
 
-		const links = data.commits.reduce((arr, commit) => arr.concat(commit.parents.map(p => {
+		const links = data.commits.reduce((arr, commit) => arr.concat(commit.parents.map((p, index) => {
 			const parentCommit = data.commits.find(c => c.id === p[0]);
 			if (!parentCommit) return null;
 			return {
@@ -65,7 +65,8 @@ const updateScene = data => {
 				to: {
 					space: parentCommit.space,
 					time: parentCommit.time,
-				}
+				},
+				merge: index !== 0,
 			};
 		})), []).filter(l => !!l);
 
