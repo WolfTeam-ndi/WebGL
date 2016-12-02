@@ -38,22 +38,37 @@ const updateCamera = state => {
 };
 
 const updateScene = data => {
-	
+
 	if(data){
 		console.log(data);
-		let meshGeom = new THREE.BoxGeometry( 1, 1, 1 );
-		let meshMat  = new THREE.MeshBasicMaterial( { color: 0xAAAAAA } ); 
-		let mesh 	 = new THREE.Mesh( meshGeom, meshMat );
+		const meshGeom = new THREE.BoxGeometry( 1, 1, 1 );
+		const meshMat  = new THREE.MeshBasicMaterial( { color: 0xAAAAAA } );
+		const mesh 	 = new THREE.Mesh( meshGeom, meshMat );
 
 		const spheres = data.commits.map(commit => {
-			let objMesh = mesh.clone();
+			const objMesh = mesh.clone();
 			objMesh.position.y = - commit.time*3;
-			let distance = Math.floor((commit.space-2)/8)+1;
-			console.log(distance);
+			const distance = Math.floor((commit.space-2)/8)+1;
 			objMesh.position.x =  distance * 3 * Math.sin((Math.PI/4)*(commit.space%8));
 			objMesh.position.z = distance * 3 * Math.cos((Math.PI/4)*(commit.space%8));
 			return objMesh;
 		});
+
+		const links = data.commits.reduce((arr, commit) => arr.concat(commit.parents.map(p => {
+			const parentCommit = data.commits.find(c => c.id === p[0]);
+			if (!parentCommit) return null;
+			return {
+				from: {
+					space: commit.space,
+					time: commit.time,
+				},
+				to: {
+					space: parentCommit.space,
+					time: parentCommit.time,
+				}
+			};
+		})), []).filter(l => !!l);
+
 		scene.add(...spheres);
 	}
 };
