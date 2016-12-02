@@ -131,7 +131,7 @@ const updateCommits = (data, viewport) => {
 			commitsElem.append(el);
 		}
 		el.style.top = `${msg.y}px`;
-		el.style.left = `${msg.x + 50}px`;
+		el.style.left = `${msg.x + 80}px`;
 	});
 	const toRemove = currentElems.filter(e => !messages.find(({ id }) => id == e.dataset.id));
 	toRemove.forEach(e => e.remove());
