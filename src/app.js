@@ -48,10 +48,9 @@ const updateScene = data => {
 	if(data){
 		console.log(data);
 		const meshGeom = new THREE.SphereGeometry( 0.8, 30,30 );
-		const meshMat  = new THREE.MeshLambertMaterial( { color: 0x666666, emissive: 0x770000, shading: THREE.SmoothShading } );
-		const mesh 	 = new THREE.Mesh( meshGeom, meshMat );
 		const spheres = data.commits.map(commit => {
-			const objMesh = mesh.clone();
+			const meshMat  = new THREE.MeshLambertMaterial( { color: 0x666666, emissive: new THREE.Color("hsl("+(((commit.space*42)%360)/360)+", 100%, 100%)"), shading: THREE.SmoothShading } );
+			const objMesh = new THREE.Mesh( meshGeom.clone(), meshMat );
 			objMesh.position.copy(vecFromSpaceTime(commit));
 			return objMesh;
 		});
