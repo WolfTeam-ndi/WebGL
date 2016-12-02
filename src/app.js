@@ -83,9 +83,9 @@ const updateScene = data => {
 				}),
 				vecFromSpaceTime(link.to)
 			);
-			//geometry.computeLineDistances();
+
 			const material = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 2 } );
-			return THREE.Line( geometry,  material );
+			return new THREE.Line( geometry,  material );
 		});
 
 		scene.add(...spheres);
