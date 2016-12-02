@@ -237,3 +237,12 @@ function initMouseHandler (el) {
 initMouseHandler(document.body);
 
 store.dispatch(selectRepo('gitlab-org/gitlab-ci-multi-runner'));
+
+const changeInput = e => {
+	if (e.which == 13) {
+		store.dispatch(selectRepo(e.target.value));
+	}
+};
+
+document.getElementById('repo').addEventListener('keydown', changeInput);
+document.getElementById('repo').addEventListener('blur', e => store.dispatch(selectRepo(e.target.value)));
