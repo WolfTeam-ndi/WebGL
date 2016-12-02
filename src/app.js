@@ -81,7 +81,7 @@ const updateScene = data => {
 					vecFromSpaceTime(link.from),
 					vecFromSpaceTime({
 						space: link.to.space,
-						time: link.to.time - 0.5
+						time: link.from.time + 0.5
 					}),
 					vecFromSpaceTime(link.to)
 				);
