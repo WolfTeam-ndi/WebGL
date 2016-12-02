@@ -1,17 +1,8 @@
 import { Scene, PerspectiveCamera, WebGLRenderer } from 'three';
-import { getNetworkUrl } from './urls';
 
-fetch(getNetworkUrl('gitlab-org/gitlab-ci-multi-runner'))
-	.then(response => response.json())
-	.then(data => console.log(data));
+import store from './store';
+import { selectCurrentBranch } from './store/selectors';
+import { selectRepo } from './store/actions';
 
-
-function createScene() {
-	const scene = new Scene();
-	const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-	const renderer = new WebGLRenderer();
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	document.body.appendChild( renderer.domElement );
-}
-
-createScene();
+store.subscribe(() => console.log(selectCurrentBranch(store.getState())));
+store.dispatch(selectRepo('gitlab-org/gitlab-ci-multi-runner'));
