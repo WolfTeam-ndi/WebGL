@@ -13,7 +13,7 @@ var geometry = new THREE.BoxGeometry( 5, 0.2, 0.2 );
 var material = new THREE.MeshBasicMaterial( { color: 0xFF0000 } ); //rouge
 var cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
-var geometry1 = new THREE.BoxGeometry( 0.2, 5, 0.2 );
+var geometry1 = new THREE.BoxGeometry( 0.2, 1000, 0.2 );
 var material1 = new THREE.MeshBasicMaterial( { color: 0x00FF00 } ); //vert
 var cube1 = new THREE.Mesh( geometry1, material1 );
 scene.add( cube1 );
@@ -39,15 +39,19 @@ const updateCamera = state => {
 
 const updateScene = data => {
 	
-	if(typeof data !== undefined){
+	if(data){
 		console.log(data);
 		let meshGeom = new THREE.BoxGeometry( 1, 1, 1 );
-		let meshMat  = new THREE.MeshBasicMaterial( { color: 0xAAAAAA } ); //rouge
+		let meshMat  = new THREE.MeshBasicMaterial( { color: 0xAAAAAA } ); 
 		let mesh 	 = new THREE.Mesh( meshGeom, meshMat );
 
 		const spheres = data.commits.map(commit => {
 			let objMesh = mesh.clone();
-			objMesh.position.y = commit.time*3;
+			objMesh.position.y = - commit.time*3;
+			let distance = Math.floor((commit.space-2)/8)+1;
+			console.log(distance);
+			objMesh.position.x =  distance * 3 * Math.sin((Math.PI/4)*(commit.space%8));
+			objMesh.position.z = distance * 3 * Math.cos((Math.PI/4)*(commit.space%8));
 			return objMesh;
 		});
 		scene.add(...spheres);

@@ -47,7 +47,7 @@ export default (state = initialState, action) => {
 				...state,
 				viewport: {
 					...state.viewport,
-					height: Math.max(0, state.viewport.height + action.delta),
+					height: Math.min(0, state.viewport.height + action.delta),
 				}
 			};
 	}
