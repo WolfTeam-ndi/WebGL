@@ -37,20 +37,25 @@ const updateCamera = state => {
 	camera.lookAt(selectLookAt(state));
 };
 
+const vecFromSpaceTime = ({ space, time }) => {
+	const distance = Math.floor((space-2)/8)+1;
+	return new THREE.Vector3(
+		distance * 3 * Math.sin((Math.PI/4)*(space%8)),
+		-time*3,
+		distance * 3 * Math.cos((Math.PI/4)*(space%8))
+	);
+};
+
 const updateScene = data => {
 
 	if(data){
 		console.log(data);
-		const meshGeom = new THREE.BoxGeometry( 1, 1, 1 );
+		const meshGeom = new THREE.SphereGeometry( 0.8, 30,30 );
 		const meshMat  = new THREE.MeshBasicMaterial( { color: 0xAAAAAA } );
 		const mesh 	 = new THREE.Mesh( meshGeom, meshMat );
-
 		const spheres = data.commits.map(commit => {
 			const objMesh = mesh.clone();
-			objMesh.position.y = - commit.time*3;
-			const distance = Math.floor((commit.space-2)/8)+1;
-			objMesh.position.x =  distance * 3 * Math.sin((Math.PI/4)*(commit.space%8));
-			objMesh.position.z = distance * 3 * Math.cos((Math.PI/4)*(commit.space%8));
+			objMesh.position.copy(vecFromSpaceTime(commit));
 			return objMesh;
 		});
 
@@ -67,9 +72,23 @@ const updateScene = data => {
 					time: parentCommit.time,
 				}
 			};
-		})), []).filter(l => !!l);
+		})), []).filter(l => !!l).map(link => {
+			const geometry = new THREE.Geometry();
+			geometry.vertices.push(
+				vecFromSpaceTime(link.from),
+				vecFromSpaceTime({
+					space: link.from.space,
+					time: link.to.time - 0.5
+				}),
+				vecFromSpaceTime(link.to)
+			);
+			//geometry.computeLineDistances();
+			const material = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 2 } );
+			return THREE.Line( geometry,  material );
+		});
 
 		scene.add(...spheres);
+		scene.add(...links);
 	}
 };
 
