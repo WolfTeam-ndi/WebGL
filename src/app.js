@@ -10,14 +10,14 @@ var camera = new THREE.PerspectiveCamera( 75, fenWidth / fenHeight, 0.1, 1000 );
 
 camera.position.z = 5;
 
-
-var renderer = new THREE.WebGLRenderer();
+var renderer = new THREE.WebGLRenderer({alpha: true});
 renderer.setSize( fenWidth, fenHeight );
 renderer.domElement.id = "rendu";
+renderer.setClearColor( 0xffffff, 0);
 var renderDiv = document.getElementById("renderDiv");
 renderDiv.appendChild( renderer.domElement );
 // Lumières
-const light = new THREE.PointLight(0xFFFFFF);
+const light = new THREE.PointLight(0xAAAAAA);
 /*
 light.shadowCameraLeft = -20;
 light.shadowCameraRight = 20;
@@ -31,7 +31,7 @@ scene.add(light);
 const updateCamera = state => {
 	camera.position.copy(selectCameraPosition(state));
 	camera.lookAt(selectLookAt(state));
-	light.position.set( camera.position.y, 0, 0 );
+	light.position.set( camera.position.x, camera.position.y, -camera.position.z );
 };
 const stepSpace = 8;
 const vecFromSpaceTime = ({ space, time }) => {
