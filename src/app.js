@@ -48,8 +48,8 @@ const updateScene = data => {
 		console.log(data);
 		const meshGeom = new THREE.SphereGeometry( 0.8, 30,30 );
 		const spheres = data.commits.map(commit => {
-			const meshMat  = new THREE.MeshLambertMaterial( { color: 0x666666, emissive: new THREE.Color("hsl("+(((commit.space*42)%360)/360)+", 100%, 100%)"), shading: THREE.SmoothShading } );
-			const objMesh = new THREE.Mesh( meshGeom.clone(), meshMat );
+			const meshMat  = new THREE.MeshLambertMaterial( { color: 0x666666, emissive: new THREE.Color("hsl("+(((commit.space*42)%360))+", 100%, 50%)"), shading: THREE.SmoothShading } );
+			const objMesh = new THREE.Mesh( meshGeom, meshMat );
 			objMesh.position.copy(vecFromSpaceTime(commit));
 			return objMesh;
 		});
@@ -70,8 +70,10 @@ const updateScene = data => {
 			};
 		})), []).filter(l => !!l).map(link => {
 			const geometry = new THREE.Geometry();
+			let material;
 
 			if (link.from.space < link.to.space) {
+				material = new THREE.LineBasicMaterial( { color: ("hsl("+(((link.to.space*42)%360))+", 100%, 50%)"), linewidth: 2 } );
 				geometry.vertices.push(
 					vecFromSpaceTime(link.from),
 					vecFromSpaceTime({
@@ -81,6 +83,7 @@ const updateScene = data => {
 					vecFromSpaceTime(link.to)
 				);
 			} else {
+				material = new THREE.LineBasicMaterial( { color: ("hsl("+(((link.from.space*42)%360))+", 100%, 50%)"), linewidth: 2 } );
 				geometry.vertices.push(
 					vecFromSpaceTime(link.from),
 					vecFromSpaceTime({
@@ -91,7 +94,6 @@ const updateScene = data => {
 				);
 			}
 
-			const material = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 2 } );
 			return new THREE.Line( geometry,  material );
 		});
 
