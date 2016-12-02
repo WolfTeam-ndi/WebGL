@@ -29,31 +29,8 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( fenWidth, fenHeight );
 renderer.domElement.id = "rendu";
 var renderDiv = document.getElementById("renderDiv");
-document.body.addEventListener("keydown", function(e){EventKey(e);});
-document.body.addEventListener("DOMMouseScroll", function(e){EventKey(e);});
-document.body.addEventListener("mousedown", function(e){EventKey(e);});
-
-document.body.addEventListener("mouseup", function(){EventKeyOff();});
-document.body.addEventListener("keyup", EventKeyOff);
-
-camera.lookAt(new THREE.Vector3( 0, 0, 0 ));
 renderDiv.appendChild( renderer.domElement );
 
-
-
-render();
-
-function render() {
-	requestAnimationFrame( render );
-	renderer.render( scene, camera );
-}
-
-update();
-function update(){
-	//cube.rotation.x += 0.01;
-	//cube.rotation.y += 0.01;
-	setTimeout(function() { update(); }, 40);
-}
 
 const updateCamera = state => {
 	camera.position.copy(selectCameraPosition(state));
@@ -64,43 +41,73 @@ const updateScene = data => {
 
 };
 
+let needsUpdate = false;
 let _oldData = null;
 let _oldViewport = null;
+
+function update() {
+	if (needsUpdate) {
+		needsUpdate = false;
+
+		const state = store.getState();
+
+		const viewport = selectViewport(state);
+		if (viewport !== _oldViewport) {
+			updateCamera(state);
+			_oldViewport = viewport;
+		}
+
+		const data = selectCurrentBranch(state);
+		if (data !== _oldData) {
+			updateScene(data);
+			_oldData = data;
+		}
+	}
+
+	requestAnimationFrame(update);
+	renderer.render(scene, camera);
+}
+
+update();
+
+
 store.subscribe(() => {
-	const state = store.getState();
-
-	const viewport = selectViewport(state);
-	if (viewport !== _oldViewport) {
-		updateCamera(state);
-		_oldViewport = viewport;
-	}
-
-	const data = selectCurrentBranch(state);
-	if (data !== _oldData) {
-		updateScene(data);
-		_oldData = data;
-	}
+	needsUpdate = true;
 });
 
-var rotCamY = 0;
-var distance =5;
-var rotCamYRange = 50.0;
-function EventKey(e){
-	if(typeof e.keyCode !== 'undefined'){
-		switch(e.keyCode){
-			case 81: store.dispatch(rotateViewport(Math.PI / 30)); break;
-			case 68: store.dispatch(rotateViewport(-Math.PI / 30)); break;
-			case 90: store.dispatch(moveViewport(0.1)); break;
-			case 83: store.dispatch(moveViewport(-0.1)); break;
-		}
-	}else{
-		console.log(e.detail);
-	}
+function initMouseHandler (el) {
+	let isMouseDown = false;
+	let currentX = 0;
+	let currentY = 0;
 
-}
-function EventKeyOff(){
-	document.getElementById("keyPrint").innerHTML="";
-}
+	const mouseDown = ({ clientX, clientY }) => {
+		isMouseDown = true;
+		currentX = clientX;
+		currentY = clientY;
+	};
 
-store.subscribe(() => console.log(selectCurrentBranch(store.getState())));
+	const updateCoords = (x, y) => {
+		if (!isMouseDown) return;
+		store.dispatch(rotateViewport((currentX - x) * (Math.PI / 100)));
+		store.dispatch(moveViewport((y - currentY) / 100));
+		currentX = x;
+		currentY = y;
+	};
+
+	const mouseUp = ({ clientX, clientY }) => {
+		updateCoords(clientX, clientY);
+		isMouseDown = false;
+	};
+
+	const mouseMove = ({ clientX, clientY }) => {
+		updateCoords(clientX, clientY);
+	};
+
+	el.addEventListener('mousedown', mouseDown);
+	el.addEventListener('mouseup', mouseUp);
+	el.addEventListener('mousemove', mouseMove);
+};
+
+initMouseHandler(document.body);
+
 store.dispatch(selectRepo('gitlab-org/gitlab-ci-multi-runner'));
