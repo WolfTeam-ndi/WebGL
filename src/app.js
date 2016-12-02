@@ -3,8 +3,8 @@ import store from './store';
 import { selectCurrentBranch, selectLookAt, selectCameraPosition, selectViewport } from './store/selectors';
 import { selectRepo, rotateViewport, moveViewport } from './store/actions';
 
-var fenWidth  = window.innerWidth*0.8;
-var fenHeight = window.innerHeight*0.8;
+var fenWidth  = window.innerWidth;
+var fenHeight = window.innerHeight;
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, fenWidth / fenHeight, 0.1, 1000 );
 
@@ -36,13 +36,13 @@ const updateCamera = state => {
 	camera.position.copy(selectCameraPosition(state));
 	camera.lookAt(selectLookAt(state));
 };
-
+const stepSpace = 8;
 const vecFromSpaceTime = ({ space, time }) => {
-	const distance = Math.floor((space-2)/8)+1;
+	const distance = Math.floor((space-2)/stepSpace)+1;
 	return new THREE.Vector3(
-		distance * 3 * Math.sin((Math.PI/4)*(space%8)),
+		distance * 3 * Math.sin(((Math.PI*2)/stepSpace)*(space%stepSpace)),
 		-time*3,
-		distance * 3 * Math.cos((Math.PI/4)*(space%8))
+		distance * 3 * Math.cos(((Math.PI*2)/stepSpace)*(space%stepSpace))
 	);
 };
 
