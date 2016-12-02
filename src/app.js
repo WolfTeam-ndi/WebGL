@@ -61,14 +61,26 @@ const updateScene = data => {
 			};
 		})), []).filter(l => !!l).map(link => {
 			const geometry = new THREE.Geometry();
-			geometry.vertices.push(
-				vecFromSpaceTime(link.from),
-				vecFromSpaceTime({
-					space: link.from.space,
-					time: link.to.time - 0.5
-				}),
-				vecFromSpaceTime(link.to)
-			);
+
+			if (link.from.space < link.to.space) {
+				geometry.vertices.push(
+					vecFromSpaceTime(link.from),
+					vecFromSpaceTime({
+						space: link.to.space,
+						time: link.from.time + 0.5
+					}),
+					vecFromSpaceTime(link.to)
+				);
+			} else {
+				geometry.vertices.push(
+					vecFromSpaceTime(link.from),
+					vecFromSpaceTime({
+						space: link.from.space,
+						time: link.to.time - 0.5
+					}),
+					vecFromSpaceTime(link.to)
+				);
+			}
 
 			const material = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 2 } );
 			return new THREE.Line( geometry,  material );
