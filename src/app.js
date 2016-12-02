@@ -8,20 +8,6 @@ var fenHeight = window.innerHeight;
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, fenWidth / fenHeight, 0.1, 1000 );
 
-
-var geometry = new THREE.BoxGeometry( 5, 0.2, 0.2 );
-var material = new THREE.MeshBasicMaterial( { color: 0xFF0000 } ); //rouge
-var cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
-var geometry1 = new THREE.BoxGeometry( 0.2, 1000, 0.2 );
-var material1 = new THREE.MeshBasicMaterial( { color: 0x00FF00 } ); //vert
-var cube1 = new THREE.Mesh( geometry1, material1 );
-scene.add( cube1 );
-var geometry2 = new THREE.BoxGeometry( 0.2, 0.2, 5 );
-var material2 = new THREE.MeshBasicMaterial( { color: 0x0000FF } ); //bleu
-var cube2 = new THREE.Mesh( geometry2, material2 );
-scene.add( cube2 );
-
 camera.position.z = 5;
 
 

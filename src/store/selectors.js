@@ -49,7 +49,7 @@ export const selectViewport = state => state.viewport;
 
 export const selectLookAt = createSelector(
 	selectViewport,
-	viewport => new Vector3(0, viewport.height, 0)
+	viewport => new Vector3(0, viewport.height-10, 0)
 );
 
 const DISTANCE = 30;
