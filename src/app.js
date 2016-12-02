@@ -17,23 +17,16 @@ renderer.domElement.id = "rendu";
 var renderDiv = document.getElementById("renderDiv");
 renderDiv.appendChild( renderer.domElement );
 // Lumières
-
-const meshLight = new THREE.SphereGeometry(0.1, 10, 10);
-const meshLightMat  = new THREE.MeshBasicMaterial( { color: 0xAAAAAA } );
-var uniforms = THREE.UniformsUtils.merge( [
-    THREE.UniformsLib[ "ambient" ],
-    THREE.UniformsLib[ "lights" ]
-] );
-const light = new THREE.Mesh(meshLight, meshLightMat);
-
-
-var lightMaterial = new THREE.ShaderMaterial( {
-    uniforms: uniforms,
-    meshLight,
-    meshLightMat,
-    lights: true
-} );
+const light = new THREE.AmbientLight(0x212223)
+/*
+light.shadowCameraLeft = -20;
+light.shadowCameraRight = 20;
+light.shadowCameraTop = 20;
+light.shadowCameraBottom = -20;
+*/
 scene.add(light);
+
+light.position.set( -60, 20, 100 );
 // Fin lumières
 const updateCamera = state => {
 	camera.position.copy(selectCameraPosition(state));
