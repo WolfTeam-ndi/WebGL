@@ -47,7 +47,8 @@ const updateScene = data => {
 	if(data){
 		console.log(data);
 		const meshGeom = new THREE.SphereGeometry( 0.8, 30,30 );
-		const meshMat  = new THREE.MeshBasicMaterial( { color: 0xAAAAAA } );
+		//const meshMat  = new THREE.MeshLambertMaterial( { color: 0x666666, emissive: 0x990000, shading: THREE.SmoothShading } );
+		const meshMat = new THREE.MeshPhongMaterial( { color: 0x000000, specular: 0x666666, emissive: 0x110000, shininess: 10, shading: THREE.SmoothShading } );
 		const mesh 	 = new THREE.Mesh( meshGeom, meshMat );
 		const spheres = data.commits.map(commit => {
 			const objMesh = mesh.clone();
