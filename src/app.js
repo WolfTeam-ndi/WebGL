@@ -121,7 +121,7 @@ function initMouseHandler (el) {
 	};
 
 	el.addEventListener('mousedown', mouseDown);
-	el.addEventListener('mouseup', mouseUp);
+	el.addEventListener('mouseup'  , mouseUp);
 	el.addEventListener('mousemove', mouseMove);
 };
 
