@@ -38,7 +38,20 @@ const updateCamera = state => {
 };
 
 const updateScene = data => {
+	
+	if(typeof data !== undefined){
+		console.log(data);
+		let meshGeom = new THREE.BoxGeometry( 1, 1, 1 );
+		let meshMat  = new THREE.MeshBasicMaterial( { color: 0xAAAAAA } ); //rouge
+		let mesh 	 = new THREE.Mesh( meshGeom, meshMat );
 
+		const spheres = data.commits.map(commit => {
+			let objMesh = mesh.clone();
+			objMesh.position.y = commit.time*3;
+			return objMesh;
+		});
+		scene.add(...spheres);
+	}
 };
 
 let needsUpdate = false;
