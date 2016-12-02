@@ -91,6 +91,55 @@ const updateScene = data => {
 	}
 };
 
+const commitsElem = document.getElementById("commits");
+
+const updateCommits = (data, viewport) => {
+	if (!data || !viewport) return;
+	const messages = data.commits.map(commit => {
+		const vec = new THREE.Vector3(
+			0,
+			-commit.time * 3,
+			0
+		);
+		vec.project(camera);
+
+		return {
+			id: commit.id,
+			x: (vec.x + 1) * renderer.domElement.width / 2,
+			y: (-vec.y + 1) * renderer.domElement.height / 2,
+			message: commit.message,
+		};
+	}).filter(({ y }) => y > 0 && y < renderer.domElement.height);
+
+	const currentElems = Array.from(commitsElem.children);
+	messages.forEach(msg => {
+		let el = currentElems.find(e => e.dataset.id == msg.id);
+		if (!el) {
+			el = document.createElement('p');
+			el.dataset.id = msg.id;
+			el.appendChild(document.createTextNode(msg.message));
+			commitsElem.append(el);
+		}
+		el.style.top = `${msg.y}px`;
+		el.style.left = `${msg.x + 50}px`;
+	});
+	const toRemove = currentElems.filter(e => !messages.find(({ id }) => id == e.dataset.id));
+	toRemove.forEach(e => e.remove());
+
+	/*messages.filter(({ id }) => !currentElems.find(e => e.dataset.id == id)).forEach(({ id, message }) => {
+		const el = document.createElement('p');
+		el.dataset.id = id;
+		el.appendChild(document.createTextNode(message));
+		commitsElem.append(el);
+	});
+
+	Array.from(commitsElem.children).forEach(e => {
+		const { x, y } = messages.find(({ id }) => id == e.dataset.id);
+		e.style.top = `${y}px`;
+		e.style.left = `${x}px`;
+	});*/
+};
+
 let needsUpdate = false;
 let _oldData = null;
 let _oldViewport = null;
@@ -101,16 +150,18 @@ function update() {
 
 		const state = store.getState();
 
-		const viewport = selectViewport(state);
-		if (viewport !== _oldViewport) {
-			updateCamera(state);
-			_oldViewport = viewport;
-		}
-
 		const data = selectCurrentBranch(state);
 		if (data !== _oldData) {
 			updateScene(data);
 			_oldData = data;
+		}
+
+		const viewport = selectViewport(state);
+		if (viewport !== _oldViewport) {
+			updateCamera(state);
+			_oldViewport = viewport;
+
+			updateCommits(data, viewport);
 		}
 	}
 
