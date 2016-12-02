@@ -16,8 +16,18 @@ renderer.setSize( fenWidth, fenHeight );
 renderer.domElement.id = "rendu";
 var renderDiv = document.getElementById("renderDiv");
 renderDiv.appendChild( renderer.domElement );
+// Lumières
+const light = new THREE.PointLight(0xFFFFFF);
+/*
+light.shadowCameraLeft = -20;
+light.shadowCameraRight = 20;
+light.shadowCameraTop = 20;
+light.shadowCameraBottom = -20;
+*/
+scene.add(light);
 
-
+light.position.set( 0, 0, 0 );
+// Fin lumières
 const updateCamera = state => {
 	camera.position.copy(selectCameraPosition(state));
 	camera.lookAt(selectLookAt(state));
@@ -37,7 +47,7 @@ const updateScene = data => {
 	if(data){
 		console.log(data);
 		const meshGeom = new THREE.SphereGeometry( 0.8, 30,30 );
-		const meshMat  = new THREE.MeshBasicMaterial( { color: 0xAAAAAA } );
+		const meshMat  = new THREE.MeshLambertMaterial( { color: 0x666666, emissive: 0x770000, shading: THREE.SmoothShading } );
 		const mesh 	 = new THREE.Mesh( meshGeom, meshMat );
 		const spheres = data.commits.map(commit => {
 			const objMesh = mesh.clone();
